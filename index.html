@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ETM የበርበሬ መሸጫ</title>
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; text-align: center; background-color: #fdf2f2; padding-bottom: 80px; }
+        header { background-color: #b30000; color: white; padding: 20px; }
+        .container { max-width: 500px; margin: auto; padding: 15px; }
+        .card { background: white; margin-bottom: 20px; padding: 20px; border-radius: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        .product-img { width: 100%; border-radius: 10px; }
+        input, select, textarea { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 8px; font-size: 16px; box-sizing: border-box; }
+        .submit-btn { background-color: #25D366; color: white; padding: 15px; border: none; border-radius: 50px; width: 100%; font-weight: bold; cursor: pointer; font-size: 18px; }
+        .bank-info { background: #fff3cd; padding: 15px; border-radius: 10px; font-weight: bold; margin-top: 10px; text-align: left; }
+        .license-img { width: 150px; margin-top: 10px; border-radius: 5px; border: 1px solid #ddd; cursor: pointer; }
+
+        /* ቻትቦት ስታይል */
+        #chat-circle { position: fixed; bottom: 20px; right: 20px; background: #b30000; width: 60px; height: 60px; border-radius: 50%; color: white; line-height: 60px; cursor: pointer; font-size: 30px; z-index: 1000; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        #chat-box { position: fixed; bottom: 90px; right: 20px; width: 300px; background: white; border-radius: 15px; box-shadow: 0 5px 25px rgba(0,0,0,0.2); display: none; flex-direction: column; z-index: 1000; overflow: hidden; text-align: left; }
+        #chat-header { background: #b30000; color: white; padding: 15px; font-weight: bold; display: flex; justify-content: space-between; }
+        #chat-content { height: 280px; padding: 15px; overflow-y: auto; font-size: 14px; }
+        .bot-msg { background: #f0f0f0; padding: 10px; border-radius: 10px; margin-bottom: 10px; color: #333; line-height: 1.4; }
+        .user-opt { display: block; width: 100%; background: white; border: 1px solid #b30000; color: #b30000; padding: 8px; margin-bottom: 5px; border-radius: 5px; cursor: pointer; text-align: left; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>እንኳን ወደ ምህረት የበርበሬ መሸጫ በሰላም መጡ!!</h1>
+        <p>ምህረት ሞላ - ደብረ ማርቆስ</p>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <img src="https://i.postimg.cc/Tpn95zNq/20260313-142816.jpg" class="product-img">
+            <h2>ምርጥ የዛላ በርበሬ</h2>
+            <p style="color: #b30000; font-size: 20px; font-weight: bold;">1 ኪሎ 800 ብር</p>
+        </div>
+
+        <div class="card">
+            <h3>ትዕዛዝዎን እዚህ ይሙሉ</h3>
+            <input type="text" id="custName" placeholder="ሙሉ ስም" required>
+            <input type="tel" id="custPhone" placeholder="የስልክ ቁጥር" required>
+            <select id="kiloAmount">
+                <option value="25kg">25 ኪሎ</option>
+                <option value="50kg">50 ኪሎ</option>
+                <option value="100kg+">ከ100 ኪሎ በላይ</option>
+            </select>
+            <textarea id="address" placeholder="አድራሻ (ከተማ/ክፍለ ከተማ)"></textarea>
+            <button type="button" onclick="sendOrder()" class="submit-btn">✅ በዋትሳፕ እዘዝ</button>
+        </div>
+
+        <div class="card">
+            <div class="bank-info">
+                <p>ቴሌ ብር: 0919672364</p>
+                <p>ንግድ ባንክ: [ቁጥርህን እዚህ አስገባ]</p>
+                <p style="color: #2c3e50; font-size: 13px; margin-top: 10px;">⚠️ የከፈላችሁበትን ደረሰኝ በቴሌግራም (@mehret2112) ላኩልን።</p>
+            </div>
+            <div style="margin-top: 15px;">
+                <p style="font-weight: bold; font-size: 14px;">ህጋዊ የንግድ ፈቃድ</p>
+                <img src="https://i.postimg.cc/xksDDJKj/629a.jpg" class="license-img" onclick="window.open(this.src)">
+            </div>
+        </div>
+    </div>
+
+    <div id="chat-circle" onclick="toggleChat()">💬</div>
+    <div id="chat-box">
+        <div id="chat-header"><span>ETM ረዳት</span><span onclick="toggleChat()" style="cursor:pointer">✖</span></div>
+        <div id="chat-content">
+            <div class="bot-msg">ሰላም! በምን ልርዳዎት?</div>
+            <button class="user-opt" onclick="botReply('legal')">ንግድ ፈቃድ አላችሁ?</button>
+            <button class="user-opt" onclick="botReply('payment')">እንዴት ነው የምከፍለው?</button>
+            <button class="user-opt" onclick="botReply('delivery')">አደራረስ እንዴት ነው?</button>
+        </div>
+    </div>
+
+    <script>
+        function toggleChat() {
+            var box = document.getElementById("chat-box");
+            box.style.display = (box.style.display === "flex") ? "none" : "flex";
+        }
+
+        function botReply(type) {
+            var content = document.getElementById("chat-content");
+            var msg = document.createElement("div");
+            msg.className = "bot-msg";
+            
+            if(type === 'legal') {
+                msg.innerHTML = "<b>ETM:</b> አዎ፣ ህጋዊ ንግድ ፈቃድ ያለን ድርጅት ነን። ፎቶውን በድረ-ገጹ ግርጌ ላይ ማየት ይችላሉ።";
+            } else if(type === 'payment') {
+                msg.innerHTML = "<b>ETM:</b> በቴሌ ብር ወይም በባንክ መክፈል ይችላሉ። ከከፈሉ በኋላ ደረሰኙን በቴሌግራም ላኩልን።";
+            } else if(type === 'delivery') {
+                msg.innerHTML = "<b>ETM:</b> ትዕዛዝዎን በሹፌር እናደርሳለን። ትዕዛዝ ሲልኩ በስልክ ደውለን እናሳውቆታለን።";
+            }
+            
+            content.appendChild(msg);
+            content.scrollTop = content.scrollHeight;
+        }
+
+        function sendOrder() {
+            var name = document.getElementById('custName').value;
+            var phone = document.getElementById('custPhone').value;
+            var kilo = document.getElementById('kiloAmount').value;
+            var addr = document.getElementById('address').value;
+
+            if(name == "" || phone == "") {
+                alert("እባክዎ ስም እና ስልክ ያስገቡ!");
+                return;
+            }
+
+            var message = "አዲስ ትዕዛዝ ከETM%0A" + 
+                          "ስም: " + name + "%0A" + 
+                          "ስልክ: " + phone + "%0A" + 
+                          "ብዛት: " + kilo + "%0A" + 
+                          "አድራሻ: " + addr;
+
+            window.location.href = "https://wa.me/251919672364?text=" + message;
+        }
+    </script>
+</body>
+</html>
